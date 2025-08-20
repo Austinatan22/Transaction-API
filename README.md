@@ -3,6 +3,7 @@
 A simple transactions management API with unit tests, containerization, and Kubernetes deployment.  
 This project demonstrates API design, persistence in memory, test-driven development, and a containerized deployment pipeline.
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/your-org/transactions-api/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/your-org/transactions-api/tree/main)
 ---
 
 ## Project Structure
@@ -123,6 +124,7 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
 
 
 
