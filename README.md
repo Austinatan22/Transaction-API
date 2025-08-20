@@ -96,7 +96,7 @@ It allows customers to view their transactions, credits, and debits.
 
 
 ## Container Diagram (C4 Level 2)
-![diagram](https://github.com/Austinatan22/Transaction-API/blob/main/image.jpg?raw=true)
+![diagram](https://github.com/Austinatan22/Transaction-API/blob/main/C4L2%20Diagram.png?raw=true)
 
 ---
 
@@ -123,5 +123,6 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
 
 
