@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            : "${DOCKER_IMAGE:=ghcr.io/<your-username>/<your-repo>:${CIRCLE_SHA1}}"
+            : "${DOCKER_IMAGE:=ghcr.io/Austinatan22/Transaction-API:${CIRCLE_SHA1}}"
             docker build -t "$DOCKER_IMAGE" .
 
 workflows:
@@ -65,4 +65,5 @@ workflows:
           requires: [test]
       - docker_build:
           requires: [build]
+
 
