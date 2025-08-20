@@ -3,6 +3,12 @@
 A simple transactions management API with unit tests, containerization, and Kubernetes deployment.  
 This project demonstrates API design, persistence in memory, test-driven development, and a containerized deployment pipeline.
 
+## Continuous Integration
+
+This project uses [CircleCI](https://circleci.com/) for continuous integration.
+
+[![CircleCI](https://circleci.com/gh/austinatan22/transaction-api/tree/main.svg?style=svg)](https://circleci.com/gh/austinatan22/transaction-api/tree/main)
+
 ---
 
 ## Project Structure
@@ -50,7 +56,7 @@ transactions-api/
   - `k8s/redpanda.yaml` deploys Redpanda for messaging.
 
 - **CI/CD**
-  - CircleCI pipeline runs `mvn test` automatically on push.
+  - CI pipeline runs `mvn test` automatically on push.
 
 ---
 
@@ -114,6 +120,7 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
 
 
 
