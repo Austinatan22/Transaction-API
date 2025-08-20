@@ -60,22 +60,13 @@ transactions-api/
 
 ````bash
 docker run --rm -v "${PWD}:/src" -w /src maven:3.9-eclipse-temurin-21 mvn clean test
-Run Locally
-bash
-Copy
-Edit
+
 docker build -t transactions-api .
 docker run -p 8080:8080 transactions-api
-Deploy to Minikube
-bash
-Copy
-Edit
+
 kubectl create namespace txapi
 kubectl apply -f k8s/ -n txapi
 kubectl get pods -n txapi
-Continuous Integration
-This project is integrated with CircleCI.
-Pipeline runs unit tests and checks build status.
 ````
 ---
 
@@ -123,6 +114,7 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
 
 
 
