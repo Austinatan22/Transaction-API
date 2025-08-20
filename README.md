@@ -7,7 +7,7 @@ This project demonstrates API design, persistence in memory, test-driven develop
 
 This project uses [CircleCI](https://circleci.com/) for continuous integration.
 
-[![CircleCI](https://circleci.com/gh/austinatan22/transaction-api/tree/main.svg?style=svg)](https://circleci.com/gh/austinatan22/transaction-api/tree/main)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Austinatan22/Transaction-API/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Austinatan22/Transaction-API/tree/main)
 
 ---
 
@@ -120,6 +120,7 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
 
 
 
