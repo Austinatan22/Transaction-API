@@ -96,25 +96,7 @@ It allows customers to view their transactions, credits, and debits.
 
 
 ## Container Diagram (C4 Level 2)
-```
-+-------------------+
-|   Customer (UI)   |
-+---------+---------+
-          |
-          v
-+-------------------+        +--------------------+
-| Transactions API  |<------>| ExchangeRateService|
-| (Spring Boot app) |        +--------------------+
-|                   |
-| - REST API        |        +--------------------+
-| - Repository      |<------>| InMemory Store     |
-+---------+---------+        +--------------------+
-          |
-          v
-+-------------------+
-| Redpanda (K8s)    |
-+-------------------+
-```
+![alt text]([http://url/to/img.png](https://github.com/Austinatan22/Transaction-API/blob/main/C4L2%20Diagram.png))
 
 ---
 
@@ -141,3 +123,4 @@ It allows customers to view their transactions, credits, and debits.
 - Deployed to **Kubernetes (namespace: txapi)**.
 - Redpanda deployed as dependency.
 - Config via `ConfigMap`.
+
