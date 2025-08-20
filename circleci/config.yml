@@ -1,0 +1,71 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@2.4.0
+  docker: circleci/docker@2.5.0
+
+executors:
+  jdk21:
+    docker:
+      - image: cimg/openjdk:21.0
+
+jobs:
+  test:
+    executor: jdk21
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - maven-{{ checksum "pom.xml" }}
+            - maven-
+      - run:
+          name: Run unit tests
+          command: mvn -B -DskipTests=false test
+      - save_cache:
+          key: maven-{{ checksum "pom.xml" }}
+          paths:
+            - ~/.m2
+
+  build_and_push_image:
+    docker:
+      - image: cimg/base:stable
+    environment:
+      IMAGE_NAME: transactions-api
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build app jar (inside temp maven container)
+          command: |
+            docker run --rm -v "$PWD:/src" -w /src maven:3.9-eclipse-temurin-21 mvn -B -DskipTests package spring-boot:repackage
+      - run:
+          name: Build Docker image
+          command: |
+            GIT_TAG=${CIRCLE_TAG:-"dev-${CIRCLE_SHA1:0:7}"}
+            docker build -t "$DOCKERHUB_USERNAME/$IMAGE_NAME:$GIT_TAG" .
+            docker tag "$DOCKERHUB_USERNAME/$IMAGE_NAME:$GIT_TAG" "$DOCKERHUB_USERNAME/$IMAGE_NAME:latest"
+      - docker/check:
+          registry: docker.io
+      - docker/push:
+          image: $DOCKERHUB_USERNAME/$IMAGE_NAME
+          tag: latest
+      - run:
+          name: Push git-tagged image too (if present)
+          command: |
+            if [ -n "$CIRCLE_TAG" ]; then
+              docker push "$DOCKERHUB_USERNAME/$IMAGE_NAME:$CIRCLE_TAG"
+            fi
+
+workflows:
+  version: 2
+  build_test_push:
+    jobs:
+      - test
+      - build_and_push_image:
+          requires: [test]
+          filters:
+            branches:
+              only: [main]
+            tags:
+              only: /.*/
