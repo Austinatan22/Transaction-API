@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: txapi-config
+  namespace: tx
+data:
+  KAFKA_BOOTSTRAP_SERVERS: "redpanda:9092"
+  KAFKA_INPUT_TOPIC: "transactions"
+  SPRING_KAFKA_STREAMS_REPLICATION_FACTOR: "1"
+  BASE_CURRENCY: "CHF"
+  FX_URL_TEMPLATE: "https://api.exchangerate.host/latest?base={base}"
+  SECURITY_DISABLED: "true"

@@ -1,0 +1,4 @@
+/src/src/test/java/com/acme/transactions/PaginationTotalsTest.java
+/src/src/test/java/com/acme/transactions/repo/InMemoryMonthlyStoreTest.java
+/src/src/test/java/com/acme/transactions/service/ExchangeRateServiceTest.java
+/src/src/test/java/com/acme/transactions/api/TransactionsControllerTest.java

@@ -1,0 +1,12 @@
+/src/src/main/java/com/acme/transactions/ingest/TransactionIngestion.java
+/src/src/main/java/com/acme/transactions/repo/InMemoryMonthlyStore.java
+/src/src/main/java/com/acme/transactions/util/Cursors.java
+/src/src/main/java/com/acme/transactions/config/security/ProdSecurityConfig.java
+/src/src/main/java/com/acme/transactions/config/SecurityConfig.java
+/src/src/main/java/com/acme/transactions/model/Amount.java
+/src/src/main/java/com/acme/transactions/api/TransactionsController.java
+/src/src/main/java/com/acme/transactions/Application.java
+/src/src/main/java/com/acme/transactions/config/security/DevSecurityConfig.java
+/src/src/main/java/com/acme/transactions/config/WebClientConfig.java
+/src/src/main/java/com/acme/transactions/model/Transaction.java
+/src/src/main/java/com/acme/transactions/service/ExchangeRateService.java
