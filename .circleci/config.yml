@@ -50,17 +50,12 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - setup_remote_docker:
-          version: 24.0.5
+      - setup_remote_docker
       - run:
           name: Build Docker image
           command: |
             : "${DOCKER_IMAGE:=ghcr.io/<your-username>/<your-repo>:${CIRCLE_SHA1}}"
             docker build -t "$DOCKER_IMAGE" .
-      # Optional push (requires registry login via project env vars)
-      # - run: |
-      #     echo "$CR_PAT" | docker login ghcr.io -u <your-username> --password-stdin
-      #     docker push "$DOCKER_IMAGE"
 
 workflows:
   build_and_test:
@@ -70,3 +65,4 @@ workflows:
           requires: [test]
       - docker_build:
           requires: [build]
+
