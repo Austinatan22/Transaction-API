@@ -1,71 +1,72 @@
 version: 2.1
 
-orbs:
-  maven: circleci/maven@2.4.0
-  docker: circleci/docker@2.5.0
-
 executors:
-  jdk21:
+  java21:
     docker:
       - image: cimg/openjdk:21.0
+    working_directory: ~/project
 
 jobs:
   test:
-    executor: jdk21
+    executor: java21
     steps:
       - checkout
       - restore_cache:
           keys:
-            - maven-{{ checksum "pom.xml" }}
-            - maven-
+            - m2-{{ arch }}-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - m2-{{ arch }}-
       - run:
           name: Run unit tests
-          command: mvn -B -DskipTests=false test
+          command: mvn -q -B test
       - save_cache:
-          key: maven-{{ checksum "pom.xml" }}
+          key: m2-{{ arch }}-{{ .Branch }}-{{ checksum "pom.xml" }}
           paths:
             - ~/.m2
+      - store_test_results:
+          path: target/surefire-reports
+      - store_artifacts:
+          path: target/surefire-reports
 
-  build_and_push_image:
-    docker:
-      - image: cimg/base:stable
-    environment:
-      IMAGE_NAME: transactions-api
+  build:
+    executor: java21
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - restore_cache:
+          keys:
+            - m2-{{ arch }}-{{ .Branch }}-{{ checksum "pom.xml" }}
+            - m2-{{ arch }}-
       - run:
-          name: Build app jar (inside temp maven container)
-          command: |
-            docker run --rm -v "$PWD:/src" -w /src maven:3.9-eclipse-temurin-21 mvn -B -DskipTests package spring-boot:repackage
+          name: Build fat JAR
+          command: mvn -q -B -DskipTests package spring-boot:repackage
+      - persist_to_workspace:
+          root: .
+          paths:
+            - target/*.jar
+
+  docker_build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - setup_remote_docker:
+          version: 24.0.5
       - run:
           name: Build Docker image
           command: |
-            GIT_TAG=${CIRCLE_TAG:-"dev-${CIRCLE_SHA1:0:7}"}
-            docker build -t "$DOCKERHUB_USERNAME/$IMAGE_NAME:$GIT_TAG" .
-            docker tag "$DOCKERHUB_USERNAME/$IMAGE_NAME:$GIT_TAG" "$DOCKERHUB_USERNAME/$IMAGE_NAME:latest"
-      - docker/check:
-          registry: docker.io
-      - docker/push:
-          image: $DOCKERHUB_USERNAME/$IMAGE_NAME
-          tag: latest
-      - run:
-          name: Push git-tagged image too (if present)
-          command: |
-            if [ -n "$CIRCLE_TAG" ]; then
-              docker push "$DOCKERHUB_USERNAME/$IMAGE_NAME:$CIRCLE_TAG"
-            fi
+            : "${DOCKER_IMAGE:=ghcr.io/<your-username>/<your-repo>:${CIRCLE_SHA1}}"
+            docker build -t "$DOCKER_IMAGE" .
+      # Optional push (requires registry login via project env vars)
+      # - run: |
+      #     echo "$CR_PAT" | docker login ghcr.io -u <your-username> --password-stdin
+      #     docker push "$DOCKER_IMAGE"
 
 workflows:
-  version: 2
-  build_test_push:
+  build_and_test:
     jobs:
       - test
-      - build_and_push_image:
+      - build:
           requires: [test]
-          filters:
-            branches:
-              only: [main]
-            tags:
-              only: /.*/
+      - docker_build:
+          requires: [build]
